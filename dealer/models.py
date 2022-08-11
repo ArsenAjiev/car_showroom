@@ -6,8 +6,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.dispatch import receiver
 from core.models import User
 
-# DEALER MODELS
-
 
 class Dealer(User):
     base_role = User.Role.DEALER
@@ -43,7 +41,10 @@ class DealerCar(models.Model):
     car = models.ForeignKey("car.Car", on_delete=models.CASCADE)
     dealer = models.ForeignKey(DealerProfile, on_delete=models.CASCADE)
     price = models.DecimalField(
-        max_digits=8, decimal_places=2, validators=[MinValueValidator(0.00)], default=0.00
+        max_digits=8,
+        decimal_places=2,
+        validators=[MinValueValidator(0.00)],
+        default=0.00,
     )
     count = models.IntegerField(default=1)
 

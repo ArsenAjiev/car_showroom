@@ -7,8 +7,6 @@ from django.dispatch import receiver
 from core.models import User
 
 
-# -----CUSTOMER MODELS---------------
-
 # class Customer
 class Customer(User):
     base_role = User.Role.CUSTOMER
@@ -51,7 +49,10 @@ class CustomerCar(models.Model):
     showroom = models.ForeignKey("showroom.ShowroomProfile", on_delete=models.CASCADE)
     count = models.IntegerField(default=1)
     price = models.DecimalField(
-        max_digits=8, decimal_places=2, validators=[MinValueValidator(0.00)], default=0.00
+        max_digits=8,
+        decimal_places=2,
+        validators=[MinValueValidator(0.00)],
+        default=0.00,
     )
 
     def __str__(self):

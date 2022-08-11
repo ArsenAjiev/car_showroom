@@ -9,9 +9,6 @@ from django.dispatch import receiver
 from core.models import User
 
 
-# SHOWROOM MODELS
-
-
 class Showroom(User):
     base_role = User.Role.SHOWROOM
     showroom_obj = ShowroomManager()
@@ -29,14 +26,16 @@ class ShowroomProfile(models.Model):
     location = CountryField(blank=True, null=True)
     # query to the dealer another name11
     car_description = models.JSONField(
-        default=dict({
-            "make": "",
-            "model": "",
-            "color": "",
-            "year": "",
-            "engine": "",
-            "price": "",
-        })
+        default=dict(
+            {
+                "make": "",
+                "model": "",
+                "color": "",
+                "year": "",
+                "engine": "",
+                "price": "",
+            }
+        )
     )
     balance = models.DecimalField(
         max_digits=8, decimal_places=2, validators=[MinValueValidator(0.00)], default=0
