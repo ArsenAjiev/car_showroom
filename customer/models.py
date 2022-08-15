@@ -7,9 +7,6 @@ from django.dispatch import receiver
 from core.models import User
 
 
-# -----CUSTOMER MODELS---------------
-
-# class Customer
 class Customer(User):
     base_role = User.Role.CUSTOMER
     customer_obj = CustomerManager()
@@ -37,7 +34,7 @@ class CustomerProfile(models.Model):
         return f"{self.user.username}"
 
 
-# signal create CustomerProfile created automatically when creating a Customer
+# signal create CustomerProfile created automatically when Customer creating
 @receiver(post_save, sender=Customer)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "CUSTOMER":

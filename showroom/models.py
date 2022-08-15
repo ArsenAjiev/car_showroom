@@ -9,9 +9,6 @@ from django.dispatch import receiver
 from core.models import User
 
 
-# SHOWROOM MODELS
-
-
 class Showroom(User):
     base_role = User.Role.SHOWROOM
     showroom_obj = ShowroomManager()
@@ -47,6 +44,7 @@ class ShowroomProfile(models.Model):
         return f"{self.user} - {self.name}"
 
 
+# signal create ShowroomProfile created automatically when Showroom creating
 @receiver(post_save, sender=Showroom)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "SHOWROOM":

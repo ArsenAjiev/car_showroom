@@ -6,8 +6,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.dispatch import receiver
 from core.models import User
 
-# DEALER MODELS
-
 
 class Dealer(User):
     base_role = User.Role.DEALER
@@ -33,6 +31,7 @@ class DealerProfile(models.Model):
         return f"{self.user} - {self.name}"
 
 
+# signal create DealerProfile created automatically when Dealer creating
 @receiver(post_save, sender=Dealer)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "DEALER":
