@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "dealer",
     "showroom",
     "rest_framework",
+    "sales",
 ]
 
 MIDDLEWARE = [

@@ -31,12 +31,8 @@ class CustomerProfileViewSet(
 class CustomerCarViewSet(
     viewsets.GenericViewSet,
     mixins.ListModelMixin,
-    mixins.CreateModelMixin,
-    viewsets.generics.RetrieveUpdateAPIView
+    mixins.RetrieveModelMixin
 
 ):
     queryset = CustomerCar.objects.all()
     serializer_class = CustomerCarSerializer
-
-
-

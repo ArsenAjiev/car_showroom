@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins
 from dealer.serializers import DealerSerializer, DealerProfileSerializer, DealerCarSerializer
-from dealer.models import Dealer, DealerProfile, DealerCar
+from dealer.serializers import TransactionSellToShowroomSerializer
+from dealer.models import Dealer, DealerProfile, DealerCar, TransactionSellToShowroom
 
 
 class DealerViewSet(
@@ -11,7 +12,6 @@ class DealerViewSet(
 ):
     queryset = Dealer.dealer_obj.all()
     serializer_class = DealerSerializer
-
 
 
 class DealerProfileViewSet(
@@ -38,3 +38,13 @@ class DealerCarViewSet(
 ):
     queryset = DealerCar.objects.all()
     serializer_class = DealerCarSerializer
+
+
+class TransactionSellToShowroomViewSet(
+    viewsets.GenericViewSet,
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+):
+    queryset = TransactionSellToShowroom.objects.all()
+    serializer_class = TransactionSellToShowroomSerializer

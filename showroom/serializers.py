@@ -1,6 +1,8 @@
 from showroom.models import Showroom, ShowroomCar, ShowroomProfile
 from rest_framework import serializers
-from dealer.models import DealerCar
+from customer.models import CustomerCar, CustomerProfile
+from showroom.models import TransactionSellToCustomer
+from django.db import transaction
 
 
 class ShowroomSerializer(serializers.ModelSerializer):
@@ -50,27 +52,59 @@ class ShowroomCarSerializer(serializers.ModelSerializer):
             'price',
         ]
 
-    def create(self, validated_data):
-        # get dealer id
-        dealer_id = validated_data['dealer'].pk
-        # get car_dealer
-        car_dealer = DealerCar.objects.get(dealer=dealer_id)
-        # reduce car to related dealer
-        car_dealer.count -= validated_data['count']
-        car_dealer.save()
-        return super(ShowroomCarSerializer, self).create(validated_data)
-
 
 class ShowroomProfileSerializer(serializers.ModelSerializer):
-    cars = ShowroomCarSerializer(many=True, source='showroomcar_set', read_only=True)
-
     class Meta:
         model = ShowroomProfile
         fields = [
             'pk',
             'name',
             # 'location',
-            'car_description',
+            'showroom_query',
             'balance',
             'cars',
         ]
+
+
+class TransactionSellToCustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TransactionSellToCustomer
+        fields = [
+            'car',
+            'customer',
+            'showroom',
+            'price',
+            'count',
+        ]
+
+    def create(self, validated_data):
+        with transaction.atomic():
+            # reduce count of car from showroom
+            showroom_id = validated_data['showroom'].pk
+            showroom_car = validated_data['car'].pk
+            car_showroom = ShowroomCar.objects.get(showroom=showroom_id, car=showroom_car)
+            car_showroom.count -= validated_data['count']
+            car_showroom.save()
+
+            # increase balance from showroom
+            showroom_id = validated_data['showroom'].pk
+            showroom_ins = ShowroomProfile.objects.get(id=showroom_id)
+            showroom_ins.balance += validated_data['price'] * validated_data['count']
+            showroom_ins.save()
+
+            # reduce balance to customer_profile
+            customer_id = validated_data['customer'].pk
+            customer_inst = CustomerProfile.objects.get(pk=customer_id)
+            customer_inst.balance -= validated_data['price'] * validated_data['count']
+            customer_inst.save()
+
+            # add data to showroom_car
+            sh_car_inst = CustomerCar.objects.create(
+                car=validated_data['car'],
+                showroom=validated_data['showroom'],
+                customer=validated_data['customer'],
+                price=validated_data['price'],
+                count=validated_data['count']
+            )
+            sh_car_inst.save()
+        return super(TransactionSellToCustomerSerializer, self).create(validated_data)

@@ -11,4 +11,3 @@ class CarViewSet(
 ):
     queryset = Car.objects.all()
     serializer_class = CarSerializer
-

@@ -1,9 +1,10 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from core.abs_model_data import CommonInfo
 
 
 # car instance
-class Car(models.Model):
+class Car(CommonInfo):
     make = models.CharField(max_length=50)
     model = models.CharField(max_length=50)
     engine = models.DecimalField(
@@ -15,9 +16,6 @@ class Car(models.Model):
         validators=[MinValueValidator(1980), MaxValueValidator(2021)]
     )
     color = models.CharField(max_length=10)
-    price = models.DecimalField(
-        max_digits=8, decimal_places=2, validators=[MinValueValidator(0.00)]
-    )
 
     def __str__(self):
-        return self.make
+        return f'{self.make} - {self.model} - {self.color}'
