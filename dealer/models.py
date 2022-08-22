@@ -35,6 +35,7 @@ class DealerProfile(CommonInfo):
         return f"{self.user} - {self.title} - {self.balance}"
 
 
+# signal create DealerProfile created automatically when Dealer creating
 @receiver(post_save, sender=Dealer)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "DEALER":

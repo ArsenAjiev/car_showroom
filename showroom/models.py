@@ -45,6 +45,7 @@ class ShowroomProfile(CommonInfo):
         return f"{self.user} - {self.name} - {self.balance}"
 
 
+# signal create ShowroomProfile created automatically when Showroom creating
 @receiver(post_save, sender=Showroom)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and instance.role == "SHOWROOM":
