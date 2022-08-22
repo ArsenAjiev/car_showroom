@@ -1,21 +1,39 @@
-"""car_showroom URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path
+from rest_framework.routers import DefaultRouter
+from django.urls import path, include
+
+from car.views import CarViewSet
+from customer.views import CustomerViewSet, CustomerProfileViewSet, CustomerCarViewSet
+from showroom.views import ShowroomViewSet, ShowroomCarViewSet, ShowroomProfileViewSet
+from dealer.views import DealerViewSet, DealerProfileViewSet, DealerCarViewSet
+from dealer.views import TransactionSellToShowroomViewSet
+from showroom.views import TransactionSellToCustomerViewSet
+from sales.views import ShowroomSalesViewSet, DealerSalesViewSet
+
+
+router = DefaultRouter()
+
+
+router.register('car', CarViewSet)
+router.register('customer', CustomerViewSet)
+router.register('showroom', ShowroomViewSet)
+router.register('dealer', DealerViewSet)
+router.register('customer_profile', CustomerProfileViewSet)
+router.register('showroom_profile', ShowroomProfileViewSet)
+router.register('dealer_profile', DealerProfileViewSet)
+router.register('car_dealer', DealerCarViewSet)
+router.register('car_showroom', ShowroomCarViewSet)
+router.register('car_customer', CustomerCarViewSet)
+router.register('sell_to_showroom', TransactionSellToShowroomViewSet)
+router.register('sell_to_customer', TransactionSellToCustomerViewSet)
+router.register('sales_showroom', ShowroomSalesViewSet)
+router.register('sales_dealer', DealerSalesViewSet)
+
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls')),
+
+
 ]
