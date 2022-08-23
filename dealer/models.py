@@ -57,7 +57,7 @@ class DealerCar(CommonInfo):
         unique_together = ('car', 'dealer',)
 
     def __str__(self):
-        return f"{self.car.make} - {self.car.model} -{self.car.color}- {self.dealer.user.username} - {self.count} - {self.price}"
+        return f"{self.car.make} - {self.car.model} -{self.car.color}- {self.dealer.user.username} - {self.count} - {self.price} - {self.is_active}"
 
 
 class TransactionSellToShowroom(models.Model):
@@ -70,4 +70,5 @@ class TransactionSellToShowroom(models.Model):
     count = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.car.make} - {self.car.model} - {self.car.color} -{self.showroom.user.username}"
+        return f"{self.car.make} - {self.car.model} - showroom:{self.showroom.name}\
+        , dealer: {self.dealer.title}- count:{self.count} -price: {self.price}"

@@ -1,5 +1,7 @@
 # pull official base image
-FROM python:3.9.13-alpine
+FROM python:3.9
+RUN apt-get update -y
+RUN apt-get upgrade -y
 
 # set work directory
 WORKDIR /usr/src/app
@@ -10,10 +12,6 @@ ENV PYTHONUNBUFFERED 1
 
 
 
-# copy project
-COPY . .
-
-# install dependencies
-RUN pip install --upgrade pip
-
+COPY requirements.txt .
 RUN pip install -r requirements.txt
+COPY . .

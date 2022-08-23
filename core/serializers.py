@@ -1,14 +1,13 @@
-from customer.models import Customer, CustomerProfile, CustomerCar
+from core.models import User
 from rest_framework import serializers
-from car.serializers import CarSerializer
 
 
-class CustomerSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(required=True, write_only=True)
     password2 = serializers.CharField(required=True, write_only=True)
 
     class Meta:
-        model = Customer
+        model = User
         fields = [
             'pk',
             'username',
@@ -28,7 +27,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         password2 = validated_data.get('password2')
 
         if password == password2:
-            user = Customer(username=username, email=email)
+            user = User(username=username, email=email)
             user.set_password(password)
             user.save()
             return user
@@ -36,34 +35,3 @@ class CustomerSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({
                 'error': 'Both passwords do not match'
             })
-
-
-class CustomerProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomerProfile
-        fields = [
-            'pk',
-            'title',
-            'customer_query',
-            'balance',
-            'cars',
-        ]
-
-
-class CustomerCarSerializer(serializers.ModelSerializer):
-
-    car = CarSerializer(read_only=True)
-    customer = CustomerProfileSerializer(read_only=True)
-
-    class Meta:
-        model = CustomerCar
-        fields = [
-            'pk',
-            'car',
-            'customer',
-            'showroom',
-            'count',
-            'price',
-        ]
-
-

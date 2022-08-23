@@ -68,4 +68,5 @@ class CustomerCar(CommonInfo):
     )
 
     def __str__(self):
-        return f"{self.car.make} - {self.car.model} - {self.car.color}- {self.customer.user.username}"
+        return f"{self.car.make} - {self.car.model} -{self.car.color}- count:{self.count}\
+        {self.price} - {self.is_active} - {self.showroom.name}- {self.customer.title}"

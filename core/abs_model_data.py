@@ -3,7 +3,7 @@ from django.utils import timezone
 
 
 class CommonInfo(models.Model):
-    is_active = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
