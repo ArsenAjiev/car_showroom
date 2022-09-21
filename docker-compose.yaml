@@ -7,6 +7,7 @@ services:
     command: sh ./entrypoint.sh
     volumes:
       - .:/usr/src/app/
+      - static-files:/usr/src/app/static
     ports:
       - 8000:8000
     env_file:
@@ -23,6 +24,69 @@ services:
     env_file:
       - ./.env
 
+  redis:
+    container_name: redis
+    image: redis
+    restart: always
+
+  celery:
+    container_name: celery
+    restart: always
+    build:
+      context: .
+    command: celery -A car_showroom worker -l INFO
+    volumes:
+      - .:/usr/src/app/
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+      - redis
+
+  celery-beats:
+      container_name: celery-beats
+      restart: always
+      build:
+        context: .
+      command: celery -A car_showroom beat -l INFO
+      env_file:
+        - ./.env
+      volumes:
+        - .:/usr/src/app/
+      depends_on:
+        - db
+        - redis
+
+  flower:
+    container_name: flower
+    build: .
+    command: celery -A car_showroom flower --port=5555
+    ports:
+      - 5556:5555
+    env_file:
+      - ./.env
+    volumes:
+      - .:/usr/src/app/
+    depends_on:
+      - web
+      - redis
+      - celery
+      - celery-beats
+
+  nginx:
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./nginx/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - static-files:/app/static
+
+    depends_on:
+      - web
+
 volumes:
   postgres_data:
+  static-files:
 
